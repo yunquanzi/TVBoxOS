@@ -23,7 +23,9 @@ public class UrlHttpUtil {
      * @param callBack：回调接口，onFailure方法在请求失败时调用，onResponse方法在请求成功后调用，这两个方法都执行在UI线程。
      */
     public static void get(String url, CallBackUtil callBack) {
-        get(url, null, null, callBack);
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("X-App-Sign", generateSign()); // 添加自定义头
+        get(url, null, headerMap, callBack);
     }
 
     /**
@@ -53,7 +55,9 @@ public class UrlHttpUtil {
      * @param callBack：回调接口，onFailure方法在请求失败时调用，onResponse方法在请求成功后调用，这两个方法都执行在UI线程。
      */
     public static void post(String url, CallBackUtil callBack) {
-        post(url, null, callBack);
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("X-App-Sign", generateSign());
+        post(url, null, headerMap, callBack);
     }
 
     /**
@@ -248,4 +252,9 @@ public class UrlHttpUtil {
         get(url, paramsMap, headerMap, callBack);
     }
 
+private static String generateSign() {
+    String packageName = "com.github.tvbox.osc";
+    long timestamp = System.currentTimeMillis() / 1000;
+    return MD5.string2MD5(packageName + timestamp);
+}
 }
