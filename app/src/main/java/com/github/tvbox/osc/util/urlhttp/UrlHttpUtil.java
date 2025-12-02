@@ -252,9 +252,9 @@ public class UrlHttpUtil {
         get(url, paramsMap, headerMap, callBack);
     }
 
-private static String generateSign() {
-    String packageName = "com.github.tvbox.osc";
-    long timestamp = System.currentTimeMillis() / 1000;
-    return MD5.string2MD5(packageName + timestamp);
-}
+    private static String generateSign() {
+        String packageName = "com.github.tvbox.osc";
+        long timestamp = System.currentTimeMillis() / 1000;
+        return MD5.string2MD5(packageName + timestamp);
+    }
 }
