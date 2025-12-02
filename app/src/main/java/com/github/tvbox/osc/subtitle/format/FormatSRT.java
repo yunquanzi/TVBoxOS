@@ -68,7 +68,14 @@ public class FormatSRT implements TimedTextFileFormat {
                     allGood = false;
                     //the first thing should be an increasing number
                     try {
-                        int num = Integer.parseInt(line);
+                        int num;
+                        try {
+                            String numStr = line.replaceAll("[^0-9]", "");
+                            num = Integer.parseInt(numStr);
+                        } catch (NumberFormatException e) {
+                            tto.warnings += "无效的字幕编号: " + line + "，使用默认序号\n";
+                            num = captionNumber;
+                        }
                         if (num != captionNumber)
                             throw new Exception();
                         else {
