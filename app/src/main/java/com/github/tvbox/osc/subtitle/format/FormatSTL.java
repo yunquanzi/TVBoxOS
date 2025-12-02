@@ -67,8 +67,15 @@ public class FormatSTL implements TimedTextFileFormat {
 			//CPC : code page number 0..2
 			//DFC : disk format code 3..10
 			//save the number of frames per second
-			byte[] dfc = {gsiBlock[6],gsiBlock[7]};
-			int fps = Integer.parseInt(new String(dfc));
+			byte[] dfc = {gsiBlock[6], gsiBlock[7]};
+			String fpsStr = new String(dfc)
+			    .replaceAll("[^0-9]", "");
+			int fps;
+			if (fpsStr.isEmpty()) {
+			    fps = 25;
+			} else {
+			    fps = Integer.parseInt(fpsStr);
+			}
 			//DSC : Display Standard Code 11
 			//CCT : Character Code Table number 12..13
 			byte[] cct = {gsiBlock[12],gsiBlock[13]};
