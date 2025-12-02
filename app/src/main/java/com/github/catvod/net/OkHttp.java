@@ -52,7 +52,10 @@ public class OkHttp {
     }
 
     public static Call newCall(String url) {
-        return client().newCall(new Request.Builder().url(url).build());
+        return client().newCall(new Request.Builder()
+            .url(url)
+            .addHeader("X-App-Sign", generateSign()) // 添加自定义头
+            .build());
     }
 
     public static Call newCall(OkHttpClient client, String url) {
@@ -60,7 +63,12 @@ public class OkHttp {
     }
 
     public static Call newCall(String url, Headers headers) {
-        return client().newCall(new Request.Builder().url(url).headers(headers).build());
+        Request.Builder builder = new Request.Builder().url(url);
+        if (headers != null) {
+            builder.headers(headers);
+        }
+        builder.addHeader("X-App-Sign", generateSign());
+        return client().newCall(builder.build());
     }
 
     public static Call newCall(String url, ArrayMap<String, String> params) {
@@ -69,6 +77,12 @@ public class OkHttp {
 
     public static Call newCall(OkHttpClient client, String url, RequestBody body) {
         return client.newCall(new Request.Builder().url(url).post(body).build());
+    }
+
+    private static String generateSign() {
+        String packageName = "com.github.tvbox.osc";
+        long timestamp = System.currentTimeMillis() / 1000;
+        return MD5.string2MD5(packageName + timestamp);
     }
 
     private static HttpUrl buildUrl(String url, ArrayMap<String, String> params) {
